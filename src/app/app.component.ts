@@ -1,6 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import * as $ from 'jquery';
-
+import { setTheme } from 'ngx-bootstrap/utils';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,6 @@ import * as $ from 'jquery';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  title = 'clientes-app';
   href: string;
 
   ngAfterViewInit() {

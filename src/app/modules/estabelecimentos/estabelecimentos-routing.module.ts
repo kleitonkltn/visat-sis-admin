@@ -9,7 +9,7 @@ const routes: Routes = [{
 }, { path: 'estabelecimentos/list', component: EstabelecimentosListComponent }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class EstabelecimentosRoutingModule { }

@@ -1,0 +1,96 @@
+<div class="container-fluid">
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <div class="p-2">
+        <mat-expansion-panel *ngIf="!idProcedimentoEdit"
+          [expanded]="panelOpenState === true">
+
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Novo
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-procedimentos-form [idEstabelecimento]='idEstabelecimento'
+          [idProcedimento]="null"
+            (closeForm)="setEdit(undefined)" (alterForm)="alterForm()">
+          </app-procedimentos-form>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel *ngIf="idProcedimentoEdit"
+          [expanded]="panelOpenState === true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Editar
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <app-procedimentos-form [idProcedimento]="idProcedimentoEdit"
+              [idEstabelecimento]='idEstabelecimento'
+              (closeForm)="setEdit(undefined)" (alterForm)="alterForm()">
+            </app-procedimentos-form>
+          </div>
+        </mat-expansion-panel>
+      </div>
+      <div class="table-responsive p-2" [hidden]="loadingList === true">
+        <div class="d-flex justify-content-center" *ngIf="loadingList === true">
+          <div class="spinner-border text-primary " role="status">
+          </div>
+        </div>
+        <div class="mb-3">
+          <input class="form-control" (keyup)="applyFilter($event)"
+            placeholder="Buscar">
+        </div>
+
+        <table mat-table matSort [dataSource]="dataSource"
+          class="mat-elevation-z8" width="100%">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Descrição
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="comments">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Observações
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.comments}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="accomplishedAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Realizado em
+            </th>
+            <td mat-cell *matCellDef="let element">
+              {{element.accomplishedAt }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="options">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> OPÇÕES
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="d-flex justify-content-left">
+                <a (click)="setEdit(element.id)" class="btn btn-primary">
+                  <i class="fa fa-edit text-white" aria-hidden="true"></i>
+                </a>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true">
+          </tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[15, 30, 60]" showFirstLastButtons>
+        </mat-paginator>
+
+      </div>
+    </div>
+  </div>
+</div>

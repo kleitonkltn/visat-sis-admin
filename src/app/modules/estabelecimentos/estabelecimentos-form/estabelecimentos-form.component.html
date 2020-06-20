@@ -1,85 +1,120 @@
 <h1 class="mt-4">Estabelecimentos</h1>
 <ol class="breadcrumb mb-4">
   <li class="breadcrumb-item active" *ngIf="isUpdate == false">Cadastro</li>
-  <li class="breadcrumb-item active" *ngIf="isUpdate == true">Edição do Cadastro</li>
+  <li class="breadcrumb-item active" *ngIf="isUpdate == true">Edição do Cadastro
+  </li>
 </ol>
-<div class="container">
-  <form [formGroup]="estabelecimentoForm">
-    <div class="row" *ngIf="isUpdate == true">
-      <div class="form-group col-md-2">
-        <b>ID:</b>
-        <input class="form-control" formControlName="id" type="text" readonly>
-      </div>
-      <div class="form-group col-md-5">
-        <b>Data do Cadastro:</b>
-        <input class="form-control" formControlName="createdAt" type="text" readonly>
-      </div>
-      <div class="form-group col-md-5">
-        <b>Ultima Atualização:</b>
-        <input class="form-control" formControlName="updatedAt" type="text" readonly>
+
+
+<mat-tab-group class="full-width">
+  <mat-tab label="Dados">
+    <div class="d-flex justify-content-center" *ngIf="loadingForm === true">
+      <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
     </div>
-    <div class="row">
-      <div class="form-group col-md-3">
-        <b>CNPJ:</b>
-        <input class="form-control" formControlName="cnpj_cpf" type="text">
-      </div>
-      <div class="form-group col-md-5">
-        <b>Razão Social:</b>
-        <input class="form-control" formControlName="razao_social" type="text">
-      </div>
-      <div class="form-group col-md-4">
-        <b>Nome Fantasia:</b>
-        <input class="form-control" formControlName="nome_fantasia" type="text">
-      </div>
+    <div class="card-body">
+      <form [formGroup]="estabelecimentoForm" class="p-4 mat-elevation-z8"
+        *ngIf="loadingForm === false">
+        <div class="row" *ngIf="isUpdate == true">
+          <mat-form-field class="col-md-2">
+            <mat-label>ID:</mat-label>
+            <input matInput formControlName="id" type="text" disabled='disabled'>
+          </mat-form-field>
+          <mat-form-field class="col-md-5">
+            <mat-label>Data do Cadastro:</mat-label>
+            <input matInput formControlName="createdAt" type="text" disabled='disabled'>
+          </mat-form-field>
+          <mat-form-field class="col-md-5">
+            <mat-label>Ultima Atualização:</mat-label>
+            <input matInput formControlName="updatedAt" type="text" disabled='disabled'>
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md">
+            <mat-label>*CNPJ:</mat-label>
+            <input matInput [formControl]="f.get('cnpj_cpf')" type="text"
+              [mask]="getCpfCnpjMask()">
+          </mat-form-field>
+          <div class="form-inline col-md-2" *ngIf="isUpdate === false">
+            <button type="button" (click)="searchCnpj()"
+              class=" btn btn-primary">
+              <div class="spinner-border text-primary"
+                *ngIf="loadingCnpj === true" role="status">
+              </div>
+              CONSULTAR
+            </button>
+          </div>
+          <mat-form-field class="col-md-7">
+            <mat-label>Razão Social:</mat-label>
+            <input matInput formControlName="razao_social" type="text">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-7">
+            <mat-label>*Nome Fantasia:</mat-label>
+            <input matInput formControlName="nome_fantasia" type="text">
+          </mat-form-field>
+
+          <mat-form-field class="col-md-5">
+            <mat-label>E-mail:</mat-label>
+            <input matInput formControlName="email" type="text">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-4">
+            <mat-label>Contato:</mat-label>
+            <input matInput formControlName="contato" type="text">
+          </mat-form-field>
+          <mat-form-field class="col-md-3">
+            <mat-label>UF</mat-label>
+            <input matInput formControlName="uf" type="text">
+          </mat-form-field>
+          <mat-form-field class="col-md-5">
+            <mat-label>Cidade</mat-label>
+            <input matInput formControlName="municipio" type="text">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-8">
+            <mat-label>*Endereço</mat-label>
+            <input matInput formControlName="endereco" type="text">
+          </mat-form-field>
+          <mat-form-field class="col-md-4">
+            <mat-label>Bairro</mat-label>
+            <input matInput formControlName="bairro" type="text">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field class="col-md-6">
+            <mat-label>*Grau de Risco</mat-label>
+            <textarea matInput formControlName="grau_de_risco"
+              rows="6"></textarea>
+          </mat-form-field>
+          <mat-form-field class="col-md-6">
+            <mat-label>Tipo Grau de Risco</mat-label>
+            <textarea matInput formControlName="tipo_de_risco"
+              rows="6"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="d-flex">
+          <div class="p-2 col-md-3"><button (click)="clearForm()"
+              class="btn btn-danger btn-lg btn-block"
+              type="button">Cancelar</button>
+          </div>
+          <div class="ml-auto p-2 col-md-3"><button
+              class="btn btn-primary btn-lg btn-block" (click)="submitForm()"
+              type="button">Enviar</button>
+          </div>
+
+        </div>
+      </form>
     </div>
-    <div class="row">
-      <div class="form-group col-md-2">
-        <b>Contato:</b>
-        <input class="form-control" formControlName="contato" type="text">
-      </div>
-      <div class="form-group col-md-4">
-        <b>E-mail:</b>
-        <input class="form-control" formControlName="email" type="text">
-      </div>
-      <div class="form-group col-md-3">
-        <b>UF</b>
-        <input class="form-control" formControlName="uf" type="text">
-      </div>
-      <div class="form-group col-md-3">
-        <b>Cidade</b>
-        <input class="form-control" formControlName="municipio" type="text">
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-7">
-        <b>Endereço</b>
-        <input class="form-control" formControlName="endereco" type="text">
-      </div>
-      <div class="form-group col-md-5">
-        <b>Bairro</b>
-        <input class="form-control" formControlName="bairro" type="text">
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <b>Grau de Risco</b>
-        <textarea class="form-control" formControlName="municipio"
-          rows="6"></textarea>
-      </div>
-      <div class="form-group col-md-6">
-        <b>Tipo Grau de Risco</b>
-        <textarea class="form-control" formControlName="municipio"
-          rows="6"></textarea>
-      </div>
-    </div>
-    <div class="d-flex">
-      <div class="p-2 col-md-3"><button class="btn btn-danger btn-lg btn-block"
-          type="button">Cancelar</button>
-      </div>
-      <div class="ml-auto p-2 col-md-3"><button
-          class="btn btn-primary btn-lg btn-block" (click)="submitForm()"
-          type="button">Enviar</button>
-      </div>
-    </div>
-  </form>
+  </mat-tab>
+
+  <mat-tab label="Procedimentos"
+    *ngIf="loadingForm === false && isUpdate === true">
+    <app-procedimentos-list [idEstabelecimento]=" f.get('id').value">
+    </app-procedimentos-list>
+  </mat-tab>
+</mat-tab-group>
