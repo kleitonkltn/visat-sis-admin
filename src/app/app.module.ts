@@ -7,17 +7,21 @@ import { TemplateModule } from './template/template.module';
 import { HomeComponent } from './components/home/home.component';
 import { EstabelecimentosModule } from './modules/estabelecimentos/estabelecimentos.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { NgxMaskModule} from 'ngx-mask';
 import { EstabelecimentosService } from './services/Estabelecimentos.service';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
+import { HttpClientJsonpModule, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData, DatePipe } from '@angular/common';
 import { ProcedimentosService } from './services/Procedimentos.service';
 import { ComponentsModule } from './components/components.module';
-import { ErrorResponseDirective } from 'src/core/errorResponse.directive';
+import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import { LoginComponent } from './modules/authentication/login/login.component';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+import { LoginService } from './services/Login.service';
+import { StorageService } from './services/storage.service';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -32,6 +36,7 @@ registerLocaleData(localePt, 'pt-BR');
     BrowserModule,
     AppRoutingModule,
     EstabelecimentosModule,
+    AuthenticationModule,
     FormsModule,
     ReactiveFormsModule,
     TemplateModule,
@@ -39,13 +44,18 @@ registerLocaleData(localePt, 'pt-BR');
     BrowserAnimationsModule,
     ComponentsModule,
     HttpClientJsonpModule,
+    JwtModule,
     NgxMaskModule.forRoot(),
     ModalModule.forRoot(),
   ],
   exports: [ErrorResponseDirective],
-  providers: [EstabelecimentosService, ProcedimentosService,
+  providers: [EstabelecimentosService, ProcedimentosService, JwtHelperService, LoginService, StorageService,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    DatePipe, ErrorResponseDirective, { provide: LOCALE_ID, useValue: 'pt-BR' }
+    DatePipe, ErrorResponseDirective, { provide: LOCALE_ID, useValue: 'pt-BR' }, {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent],
 

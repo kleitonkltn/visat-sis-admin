@@ -1,0 +1,8 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$visat-primary: mat-palette($mat-blue,A200);
+$visat-accent:  mat-palette($mat-pink, 500, 900, A100);
+$visat-warn:    mat-palette($mat-deep-orange);
+$visat-theme: mat-light-theme($visat-primary, $visat-accent, $visat-warn);
+@include angular-material-theme($visat-theme);

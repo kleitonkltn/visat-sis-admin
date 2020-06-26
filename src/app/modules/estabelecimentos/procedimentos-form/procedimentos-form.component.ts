@@ -8,7 +8,7 @@ import { Subject, pipe } from 'rxjs';
 import { ConfirmDialogService } from 'src/app/components/comfirm-dialog/confirm-dialog.service';
 import { isEmpty, catchError, retry } from 'rxjs/operators';
 import { isUndefined, isNull } from 'util';
-import { ErrorResponseDirective } from 'src/core/errorResponse.directive';
+import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
 @Component({
   selector: 'app-procedimentos-form',
   templateUrl: './procedimentos-form.component.html',

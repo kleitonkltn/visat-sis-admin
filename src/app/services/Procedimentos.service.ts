@@ -3,7 +3,7 @@ import { Procedimentos } from 'src/models/Procedimentos';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
-import { ErrorResponseDirective } from 'src/core/errorResponse.directive';
+import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'

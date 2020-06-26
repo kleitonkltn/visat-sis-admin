@@ -1,18 +1,17 @@
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-info">
   <div class="row align-middle ">
-    <a routerLink="/home" class="p-2 nav-link">
-      <img  src="assets/images/visat.png" height="40px" alt="">
-
+    <a routerLink="/home" class="p-4 nav-link">
+      <img src="assets/images/visat.png" height="40px" alt="">
     </a>
-
-    <button class="p-2 nav-link btn btn-link btn-sm "
-      id="sidebarToggle" href="#">
+    <button class="p-2 btn btn-link" id="sidebarToggle" href="#">
       <i style="color:#eee;font-size: 30px;" class="fas fa-bars"></i>
     </button>
   </div>
 
+
   <div class="float-left ml-auto">
-    <i class="fa fa-user-circle" style="color:#fff;font-size: 25px;"></i>
+    <button mat-button (click)="openDialog()"><i
+        class="fa fa-user-circle" style="font-size: 26px;color: white;"></i></button>
   </div>
 
 

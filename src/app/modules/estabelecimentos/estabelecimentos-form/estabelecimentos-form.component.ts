@@ -2,11 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, Validators, FormGroup, AbstractControl } from '@angular/forms';
 import { Estabelecimentos } from 'src/models/Estabelecimentos';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { isUndefined, isNull } from 'util';
+import { Observable } from 'rxjs';
+import { isUndefined } from 'util';
 import { ConfirmDialogService } from 'src/app/components/comfirm-dialog/confirm-dialog.service';
 import { EstabelecimentosService } from 'src/app/services/Estabelecimentos.service';
-import { IfStmt } from '@angular/compiler';
 import { ConsultaCNPJService } from 'src/app/services/ConsultaCNPJ.service';
 import { CNPJ } from 'src/models/CNPJ';
 @Component({
@@ -86,23 +85,22 @@ export class EstabelecimentosFormComponent implements OnInit {
   public get f(): FormGroup { return this.estabelecimentoForm };
   public formItem(campo: string): AbstractControl { return this.estabelecimentoForm.get(campo) };
 
-  // this.idUpdate = this.isUpdate == false ? 100 : undefined
   submitForm() {
 
     if (this.f.valid === true) {
       this.formToObject()
       if (this.idUpdate != null) {
+        this.estabelecimento.id = this.idUpdate;
         this.estabelecimentoService.update(this.estabelecimento).subscribe(() => {
           this.modalService.openConfirmDialog('Cadastro atualizado com sucesso', 'Cadastro', false, 'alert-success')
             .then(() => {
               this.router.navigate(['estabelecimentos/list'])
             })
-
         })
       } else {
         this.estabelecimentoService.create(this.estabelecimento).subscribe((response) => {
           if (response['id']) {
-            this.modalService.openConfirmDialog('Cadastro realizaFo com sucesso *', 'Cadastro', false, 'alert-success')
+            this.modalService.openConfirmDialog('Cadastro realizado com sucesso *', 'Cadastro', false, 'alert-success')
               .then(() => {
                 this.router.navigate(['estabelecimentos/list'])
               })

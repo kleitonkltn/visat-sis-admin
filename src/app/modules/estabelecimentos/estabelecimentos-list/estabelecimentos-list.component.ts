@@ -42,10 +42,12 @@ export class EstabelecimentosListComponent implements OnInit {
     this.items = this.estabelecimentos;
   }
   getEstabelecimentos() {
+    this.loadingList = true
     return new Promise((resolve, _reject) => {
       this.estabalecimentoService.getAll().subscribe((items: Estabelecimentos[]) => {
         this.estabelecimentos = items;
         this.initializeItems()
+        this.loadingList = false
         resolve(items)
       })
     })

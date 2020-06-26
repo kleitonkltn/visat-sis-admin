@@ -23,8 +23,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ProcedimentosFormComponent } from './procedimentos-form/procedimentos-form.component';
 import { MatButtonModule } from '@angular/material/button';
-import { ErrorResponseDirective } from 'src/core/errorResponse.directive';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
 @NgModule({
   declarations: [
     EstabelecimentosFormComponent,
@@ -41,9 +42,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     NgxMaskModule,
     HttpClientModule,
     ComponentsModule,
-    MatTableModule,
-    MatInputModule,
-    MatSortModule,
     HttpClientJsonpModule,
     MatPaginatorModule,
     MatExpansionModule,
@@ -51,6 +49,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatDatepickerModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatTableModule,
+    MatInputModule,
+    MatSortModule,
     MatTabsModule
   ], exports: [ProcedimentosListComponent, ProcedimentosFormComponent],
   providers: [ConfirmDialogService, ConsultaCNPJService, ErrorResponseDirective],
