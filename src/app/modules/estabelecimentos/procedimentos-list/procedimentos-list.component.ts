@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-procedimentos-list',
   templateUrl: './procedimentos-list.component.html',
-  styleUrls: ['./procedimentos-list.component.css']
+  styleUrls: ['./procedimentos-list.component.sass']
 })
 export class ProcedimentosListComponent implements OnInit {
   panelOpenState = false;

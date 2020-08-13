@@ -7,7 +7,7 @@ import { TemplateModule } from './template/template.module';
 import { HomeComponent } from './components/home/home.component';
 import { EstabelecimentosModule } from './modules/estabelecimentos/estabelecimentos.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxMaskModule} from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
 import { EstabelecimentosService } from './services/Estabelecimentos.service';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpClientJsonpModule, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -22,6 +22,7 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { LoginService } from './services/Login.service';
 import { StorageService } from './services/storage.service';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { Tools } from './utils/tools-service';
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -49,7 +50,8 @@ registerLocaleData(localePt, 'pt-BR');
     ModalModule.forRoot(),
   ],
   exports: [ErrorResponseDirective],
-  providers: [EstabelecimentosService, ProcedimentosService, JwtHelperService, LoginService, StorageService,
+  providers: [EstabelecimentosService, ProcedimentosService, JwtHelperService,
+    LoginService, StorageService, Tools,
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     DatePipe, ErrorResponseDirective, { provide: LOCALE_ID, useValue: 'pt-BR' }, {
       provide: HTTP_INTERCEPTORS,

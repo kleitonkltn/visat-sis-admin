@@ -20,6 +20,7 @@ export class EstabelecimentosFormComponent implements OnInit {
   idUpdate: number;
   formSubmitted = false;
   loadingForm = false;
+  submittingForm = false;
   loadingCnpj = false;
 
   public get isUpdate(): boolean { return !isUndefined(this.idUpdate) }
@@ -86,7 +87,7 @@ export class EstabelecimentosFormComponent implements OnInit {
   public formItem(campo: string): AbstractControl { return this.estabelecimentoForm.get(campo) };
 
   submitForm() {
-
+    this.submittingForm = true
     if (this.f.valid === true) {
       this.formToObject()
       if (this.idUpdate != null) {
@@ -94,6 +95,7 @@ export class EstabelecimentosFormComponent implements OnInit {
         this.estabelecimentoService.update(this.estabelecimento).subscribe(() => {
           this.modalService.openConfirmDialog('Cadastro atualizado com sucesso', 'Cadastro', false, 'alert-success')
             .then(() => {
+              this.submittingForm = false
               this.router.navigate(['estabelecimentos/list'])
             })
         })
@@ -102,45 +104,62 @@ export class EstabelecimentosFormComponent implements OnInit {
           if (response['id']) {
             this.modalService.openConfirmDialog('Cadastro realizado com sucesso *', 'Cadastro', false, 'alert-success')
               .then(() => {
+                this.submittingForm = false
                 this.router.navigate(['estabelecimentos/list'])
               })
           }
         })
       }
     } else {
+      this.submittingForm = false
       this.modalService.openConfirmDialog('Cadastro incompleto. Favor preencha todos os campos com *', 'Cadastro', false, 'alert-danger')
     }
   }
   searchCnpj() {
     this.loadingCnpj = true;
-    const cnpj = this.f.get('cnpj_cpf').value.replace('/', '').replace('-', '').replace('.', '');
-    this.cnpjService.getInfoCNPJ(cnpj).subscribe((data: CNPJ) => {
-      this.estabelecimento.razao_social = data.nome
-      this.estabelecimento.nome_fantasia = data.fantasia
-      this.estabelecimento.contato = data.telefone
-      this.estabelecimento.municipio = data.municipio
-      this.estabelecimento.uf = data.uf
-      this.estabelecimento.email = data.email
-      this.estabelecimento.endereco = data.logradouro
-      this.estabelecimento.bairro = data.bairro
-      this.estabelecimento.tipo_de_risco = 'Atividade Principal'
-      data.atividade_principal.forEach(element => {
-        this.estabelecimento.tipo_de_risco = this.estabelecimento.tipo_de_risco + ' \n' + element.code + ' - ' + element.text
-      });
-      this.estabelecimento.tipo_de_risco = this.estabelecimento.tipo_de_risco + ' \n \n' + 'Atividade Secundárias'
-      data.atividades_secundarias.forEach(element => {
-        this.estabelecimento.tipo_de_risco = this.estabelecimento.tipo_de_risco + ' \n' + element.code + ' - ' + element.text
-      });
-      this.createForm(this.estabelecimento);
-      this.estabelecimentoForm.controls['cnpj_cpf'].setValue(data.cnpj)
+    if (this.isCPF()) {
       this.loadingCnpj = false;
+      return this.modalService.openConfirmDialog('Consulta Permitida Somente a CNPJ',
+        'Dados Inválidos', false, 'alert-danger')
+    } else {
+      const cnpj = this.f.get('cnpj_cpf').value.replace('/', '').replace('-', '').replace('.', '');
+      this.cnpjService.getInfoCNPJ(cnpj).subscribe((data: any) => {
+        console.log(data);
+        if (data.status === 'ERROR') {
+          this.loadingCnpj = false;
+          return this.modalService.openConfirmDialog('Erro ao Realizar consulta do CNPJ. Favor preencher manualmente',
+            data.message, false, 'alert-danger')
+        }
+        this.cnpjToEstabelecimento(data);
+        this.createForm(this.estabelecimento);
+        this.estabelecimentoForm.controls['cnpj_cpf'].setValue(data.cnpj)
+        this.loadingCnpj = false;
+      })
+    }
+  }
+  cnpjToEstabelecimento(data) {
+    this.estabelecimento.razao_social = data.nome
+    this.estabelecimento.nome_fantasia = data.fantasia
+    this.estabelecimento.contato = data.telefone
+    this.estabelecimento.municipio = data.municipio
+    this.estabelecimento.uf = data.uf
+    this.estabelecimento.email = data.email
+    this.estabelecimento.endereco = `${data.logradouro} - N° ${data.numero}`;
+    this.estabelecimento.bairro = data.bairro
+    this.estabelecimento.tipo_de_risco = 'Atividade Principal'
+    data.atividade_principal.forEach(element => {
+      this.estabelecimento.tipo_de_risco = this.estabelecimento.tipo_de_risco + ' \n' + element.code + ' - ' + element.text
+    });
+    this.estabelecimento.tipo_de_risco = this.estabelecimento.tipo_de_risco + ' \n \n' + 'Atividade Secundárias'
+    data.atividades_secundarias.forEach(element => {
+      this.estabelecimento.tipo_de_risco = this.estabelecimento.tipo_de_risco + ' \n' + element.code + ' - ' + element.text
     });
   }
   formToObject() {
     this.estabelecimento = this.estabelecimentoForm.value;
   }
 
-  async clearForm() {
+  clearForm() {
     this.modalService.openConfirmDialog('Deseja Cancelar o cadastro?', 'Cadastro').then((response) => {
       if (response === true) {
         this.router.navigate(['estabelecimentos/list'])

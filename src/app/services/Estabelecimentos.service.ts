@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Estabelecimentos } from 'src/models/Estabelecimentos';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ErrorResponseDirective } from '../core/errorResponse.directive';
@@ -10,9 +10,6 @@ import { ErrorResponseDirective } from '../core/errorResponse.directive';
 })
 export class EstabelecimentosService {
 
-  url = 'http://localhost:3000/api/estabelecimentos';
-
-  // injetando o HttpClient
   constructor(private httpClient: HttpClient, private errorRespnse: ErrorResponseDirective) { }
 
   httpOptions = {
@@ -38,4 +35,32 @@ export class EstabelecimentosService {
   }
 
 
+  getPDFReportAllEstabelecimentos(): Observable<HttpResponse<Blob>> {
+    let headers = new HttpHeaders();
+    headers = new HttpHeaders({ Accept: 'application/pdf' });
+    return this.httpClient.post(environment.urlReportEstabelecimentos + '/all', '', {
+      headers, responseType: 'blob', observe: 'response'
+    });
+  }
+  getReportEstabelecimentosByDate(startDate, endDate): Observable<HttpResponse<Blob>> {
+    let headers = new HttpHeaders();
+    headers = new HttpHeaders({ Accept: 'application/pdf' });
+    return this.httpClient.post(environment.urlReportEstabelecimentos + '/date',
+      {
+        startDate,
+        endDate
+      }, {
+      headers, responseType: 'blob', observe: 'response'
+    });
+  }
+  getReportEstabelecimentosByIDs(ids: number[]): Observable<HttpResponse<Blob>> {
+    let headers = new HttpHeaders();
+    headers = new HttpHeaders({ Accept: 'application/pdf' });
+    return this.httpClient.post(environment.urlReportEstabelecimentos + '/multipleids',
+      {
+        ids
+      }, {
+      headers, responseType: 'blob', observe: 'response'
+    });
+  }
 }
