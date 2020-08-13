@@ -26,12 +26,16 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
+import { CNPJandCPFPipe } from 'src/app/core/pipe/cnpj_cpf.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 @NgModule({
   declarations: [
     EstabelecimentosFormComponent,
     EstabelecimentosListComponent,
     ProcedimentosListComponent,
-    ProcedimentosFormComponent
+    ProcedimentosFormComponent,
+    CNPJandCPFPipe,
   ],
   imports: [
     CommonModule,
@@ -52,9 +56,11 @@ import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
     MatTableModule,
     MatInputModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatProgressSpinnerModule,
     MatTabsModule
   ], exports: [ProcedimentosListComponent, ProcedimentosFormComponent],
-  providers: [ConfirmDialogService, ConsultaCNPJService, ErrorResponseDirective],
+  providers: [ConfirmDialogService, ConsultaCNPJService, ErrorResponseDirective, CNPJandCPFPipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class EstabelecimentosModule { }

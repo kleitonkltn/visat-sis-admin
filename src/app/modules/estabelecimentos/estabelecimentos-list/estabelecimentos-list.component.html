@@ -2,22 +2,60 @@
 <ol class="breadcrumb mb-4">
   <li class="breadcrumb-item active">Listagem</li>
 </ol>
-<div class="container-fluid">
 
+<div class="container-fluid">
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Estabelecimentos</h6>
-    </div>
-    <div class="card-body">
-      <div class="d-flex justify-content-left mb-3">
-        <a [routerLink]="['/estabelecimentos/form']" class="btn btn-primary">
+      <div class="mr-auto p-2 bd-highlight">
+        <button mat-raised-button color="primary"
+          [routerLink]="['/estabelecimentos/form']">
           <i class="fa fa-plus" aria-hidden="true"></i>
-          NOVO
-        </a>
+          NOVO</button>
       </div>
-      <div class="d-flex justify-content-center" *ngIf="loadingList === true">
-        <div class="spinner-border text-primary " role="status">
+      <div class="row align-items-center no-gutters p-2 ">
+        <div class="col-xl-auto">
+          <mat-form-field class="pr-2">
+            <mat-label>Data Inicial</mat-label>
+            <input matInput [matDatepicker]="dataInicial">
+            <mat-datepicker-toggle matSuffix [for]="dataInicial">
+            </mat-datepicker-toggle>
+            <mat-datepicker #dataInicial></mat-datepicker>
+          </mat-form-field>
         </div>
+        <div class="col-xl-auto mr-4">
+          <mat-form-field>
+            <mat-label>Data Final</mat-label>
+            <input matInput [matDatepicker]="dataFinal">
+            <mat-datepicker-toggle matSuffix [for]="dataFinal">
+            </mat-datepicker-toggle>
+            <mat-datepicker #dataFinal></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-auto p-2">
+          <button mat-raised-button class="p-2"
+            [disabled]="dataFinal._selected == null || dataInicial._selected == null"
+            style="min-width: 120pt" (click)="getReportEstabelecimentosByDate()"
+            color="primary">
+            <i class="fa fa-file-pdf mr-2"></i>Periodo</button>
+        </div>
+
+        <div class="col-md-auto p-2">
+          <button mat-raised-button class="p-2" style="min-width: 120pt"
+            [disabled]="selection.selected.length == 0"
+            (click)="getReportEstabelecimentosByIDs()" color="primary">
+            <i class="fa fa-file-pdf mr-2"></i>Selecionados</button>
+        </div>
+        <div class="col-md-auto p-2">
+          <button mat-raised-button class="p-2" style="min-width: 120pt"
+            (click)="getPDFReportAllEstabelecimentos()" color="primary">
+            <i class="fa fa-file-pdf mr-2"></i>Todos</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body" (window:resize)="onResize($event)">
+      <div class="d-flex justify-content-center" *ngIf="loadingList === true">
+        <mat-spinner class="align-self-center"></mat-spinner>
+        <div style="height: 70vh"></div>
       </div>
       <div class="table-responsive p-2" [hidden]="loadingList === true">
         <div class="mb-3">
@@ -27,41 +65,62 @@
 
         <table mat-table matSort [dataSource]="dataSource"
           class="mat-elevation-z8" width="100%">
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+                [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
             <td mat-cell *matCellDef="let element"> {{element.id}} </td>
           </ng-container>
 
           <ng-container matColumnDef="razao_social">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Razão Social
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Razão
+              Social
             </th>
-            <td mat-cell *matCellDef="let element"> {{element.razao_social}}
+            <td mat-cell *matCellDef="let element" class="ml-4 text-truncate"
+              style="max-width: 15vw;">
+              {{element.razao_social}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="nome_fantasia">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome Fantasia
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome
+              Fantasia
             </th>
-            <td mat-cell *matCellDef="let element"> {{element.nome_fantasia}}
+            <td mat-cell *matCellDef="let element" class="text-truncate"
+              style="max-width: 15vw;"> {{element.nome_fantasia}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="cnpj_cpf">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> CNPJ/CPF
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{element.cnpj_cpf |  mask: '00.000.000/0000-00'}} </td>
+            <td mat-cell *matCellDef="let element" class="text-truncate"
+              style="max-width: 10vw;">
+              {{element.cnpj_cpf |  CNPJandCPF}} </td>
           </ng-container>
 
           <ng-container matColumnDef="options">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> OPÇÕES
             </th>
-            <td mat-cell *matCellDef="let element">
-              <div class="d-flex justify-content-left">
+            <td mat-cell *matCellDef="let element" style="width: 20px;">
+              <div class="d-flex justify-content-center">
                 <a [routerLink]="['/estabelecimentos/form']"
                   [queryParams]="{id:element.id}"
-                  routerLinkActive="router-link-active"
-                  class="btn btn-primary">
+                  routerLinkActive="router-link-active" class="btn btn-primary">
                   <i class="fa fa-edit" aria-hidden="true"></i>
                 </a>
               </div>

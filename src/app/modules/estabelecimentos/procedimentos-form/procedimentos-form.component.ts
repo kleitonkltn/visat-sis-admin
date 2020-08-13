@@ -2,17 +2,16 @@ import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Procedimentos } from 'src/models/Procedimentos';
 import { ProcedimentosService } from 'src/app/services/Procedimentos.service';
-import { DatePipe, formatDate } from '@angular/common';
+import { DatePipe} from '@angular/common';
 import * as moment from 'moment-timezone';
-import { Subject, pipe } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ConfirmDialogService } from 'src/app/components/comfirm-dialog/confirm-dialog.service';
-import { isEmpty, catchError, retry } from 'rxjs/operators';
-import { isUndefined, isNull } from 'util';
+import { isNull } from 'util';
 import { ErrorResponseDirective } from 'src/app/core/errorResponse.directive';
 @Component({
   selector: 'app-procedimentos-form',
   templateUrl: './procedimentos-form.component.html',
-  styleUrls: ['./procedimentos-form.component.css']
+  styleUrls: ['./procedimentos-form.component.sass']
 })
 export class ProcedimentosFormComponent implements OnInit {
   @Input() idProcedimento: number;
@@ -51,7 +50,7 @@ export class ProcedimentosFormComponent implements OnInit {
 
     if (isNull(this.idProcedimento)) {
       this.formToObject();
-      this.procedimentosService.create(this.procedimento).subscribe((data) => {
+      this.procedimentosService.create(this.procedimento).subscribe(() => {
         this.modalService.openConfirmDialog('Cadastro realizado com sucesso', 'Cadastro', false, 'alert-success')
           .then(() => {
             this.updateForm();
@@ -60,7 +59,7 @@ export class ProcedimentosFormComponent implements OnInit {
       }, (err) => { console.log(err); this.errorMessage = err });
     } else {
       this.formToObject();
-      this.procedimentosService.update(this.procedimento).subscribe((data) => {
+      this.procedimentosService.update(this.procedimento).subscribe(() => {
         this.modalService.openConfirmDialog('Cadastro atualizado com sucesso', 'Cadastro', false, 'alert-success')
           .then(() => {
             this.updateForm();
