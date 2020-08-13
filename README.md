@@ -3,15 +3,25 @@
 ## Tecnologias Utilizadas
 
 > Angular
+
 > Angular Material
+
 > Bootstrap
+
 > SASS
+
 > Firebase
+
 > Firebase Hosting
+
 > JWT
+
 > jQuery
+
 > ngx-mask
+
 > VS Code
+
 
 ## Recursos
 
@@ -41,6 +51,8 @@ Contribuições são sempre bem-vindas!
 
 ## Links
 
-[Back-End da Aplicação](https://github.com/kleitonkltn/std_sys)
-[Endereço da APlicação](https://visatcoxim.web.app/)
+[Repositório Back-End](https://github.com/kleitonkltn/std_sys)
+
+[Aplicação Hospedada](https://visatcoxim.web.app)
+
 [ReceitaWS](https://www.receitaws.com.br)
