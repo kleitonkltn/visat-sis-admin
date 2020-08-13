@@ -9,9 +9,8 @@
 <mat-tab-group class="full-width">
   <mat-tab label="Dados">
     <div class="d-flex justify-content-center" *ngIf="loadingForm === true">
-      <div class="spinner-grow text-primary" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+      <mat-spinner class="align-self-center" ></mat-spinner>
+        <div style="height: 70vh"></div>
     </div>
     <div class="card-body">
       <form [formGroup]="estabelecimentoForm" class="p-4 mat-elevation-z8"
@@ -19,15 +18,18 @@
         <div class="row" *ngIf="isUpdate == true">
           <mat-form-field class="col-md-2">
             <mat-label>ID:</mat-label>
-            <input matInput formControlName="id" type="text" disabled='disabled'>
+            <input matInput formControlName="id" type="text"
+              disabled='disabled'>
           </mat-form-field>
           <mat-form-field class="col-md-5">
             <mat-label>Data do Cadastro:</mat-label>
-            <input matInput formControlName="createdAt" type="text" disabled='disabled'>
+            <input matInput formControlName="createdAt" type="text"
+              disabled='disabled'>
           </mat-form-field>
           <mat-form-field class="col-md-5">
             <mat-label>Ultima Atualização:</mat-label>
-            <input matInput formControlName="updatedAt" type="text" disabled='disabled'>
+            <input matInput formControlName="updatedAt" type="text"
+              disabled='disabled'>
           </mat-form-field>
         </div>
         <div class="row">
@@ -102,11 +104,19 @@
               class="btn btn-danger btn-lg btn-block"
               type="button">Cancelar</button>
           </div>
-          <div class="ml-auto p-2 col-md-3"><button
-              class="btn btn-primary btn-lg btn-block" (click)="submitForm()"
-              type="button">Enviar</button>
-          </div>
 
+
+          <div class="ml-auto p-2 col-md-3">
+            <button class="btn btn-primary btn-lg btn-block"
+              [disabled]="submittingForm" (click)="submitForm()" type="button">
+              <div class="d-flex justify-content-center">
+                <mat-spinner class="align-self-center mr-2" *ngIf="submittingForm"
+                  [diameter]='25' color="accent">
+                </mat-spinner>
+                Enviar
+              </div>
+            </button>
+          </div>
         </div>
       </form>
     </div>

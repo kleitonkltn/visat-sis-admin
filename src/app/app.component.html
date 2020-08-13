@@ -4,10 +4,10 @@
   <app-sidebar></app-sidebar>
   <div id="layoutSidenav_content">
     <main>
-      <div class="container-fluid">
+      <div class="container-fluid" id="body-page">
         <router-outlet></router-outlet>
       </div>
-      <footer *ngIf="loginMode === false" class="py-4 bg-primary mt-auto">
+      <footer *ngIf="loginMode === false" class="py-2 bg-primary">
         <div class="container-fluid">
           <div class="d-flex align-items-center justify-content-between small">
             <div class="text-white">Copyright &copy; KR Soluções em Tecnologia
