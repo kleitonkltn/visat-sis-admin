@@ -18,6 +18,7 @@ import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { StorageService } from 'src/app/services/storage.service';
 import { UserInfoComponent } from './user-info/user-info.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export function jwtOptionsFactory(tokenService) {
   return {
@@ -43,6 +44,7 @@ export function jwtOptionsFactory(tokenService) {
     MatInputModule,
     MatIconModule,
     MatDialogModule,
+    MatProgressSpinnerModule,
     JwtModule.forRoot({
       jwtOptionsProvider: {
         provide: JWT_OPTIONS,
